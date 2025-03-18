@@ -1,0 +1,10 @@
+[run]
+omit =
+    main.py
+    src/__init__.py
+    tests/*
+
+[report]
+exclude_lines = 
+    pragma: no cover
+    if TYPE_CHECKING:
