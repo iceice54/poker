@@ -20,3 +20,14 @@ class Card():
         }
         value_name = value_names.get(self.value, str(self.value))
         return (f"{value_name}{self.suit.value}")
+    
+    def __lt__(self, other):
+        return self.value < other.value
+    
+    def __eq__(self, other):
+        if isinstance(other, Card):
+            return self.value == other.value and self.suit == other.suit
+        return False
+
+    def __repr__(self):
+        return f"Card(value={self.value}, suit={self.suit})"

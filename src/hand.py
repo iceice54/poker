@@ -6,8 +6,8 @@ if TYPE_CHECKING:
     from .card import Card
 
 class Hand():
-    def __init__(self, max_cards: int = 2) -> None:
-        self.cards: list[Card] = []
+    def __init__(self, max_cards: int = 2, cards: list[Card] | None = None) -> None:
+        self.cards = cards if cards is not None else []
         self.max_cards = max_cards
 
     def add_card(self, card: Card) -> None:
