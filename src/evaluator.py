@@ -19,20 +19,20 @@ class HandStrength(Enum):
 class Evaluator():
 
     def check_flush(self, cards: list[Card]) -> list[Card] | None:
-            suits = [card.suit.value for card in cards]
-            for suit in ["d", "c", "h", "s"]:
-                if suits.count(suit) >= 5:
-                    return [card for card in cards if card.suit.value == suit]
-            return None
-    
+        suits = [card.suit.value for card in cards]
+        for suit in ["d", "c", "h", "s"]:
+            if suits.count(suit) >= 5:
+                return [card for card in cards if card.suit.value == suit]
+        return None
+
     def check_straight(self, cards: list[Card]) -> list[Card] | None:
-            values = sorted(set(card.value for card in cards), reverse=True)
-            if 14 in values:
-                values.insert(0,1)
-            for i in range(len(values)-4):
-                if values[i] - values[i+4] == 4:
-                    return [card for card in cards if card.value in values[i:i + 5]]
-            return None
+        values = sorted(set(card.value for card in cards), reverse=True)
+        if 14 in values:
+            values.insert(0,1)
+        for i in range(len(values)-4):
+            if values[i] - values[i+4] == 4:
+                return [card for card in cards if card.value in values[i:i + 5]]
+        return None
 
     def calc_hand_strength(self, player_hand: PlayerHand, community_cards: CommunityCards) -> tuple[HandStrength, list[Card]]:
         # all_cards: list[Card] = player_hand.cards + community_cards.cards
@@ -44,18 +44,18 @@ class Evaluator():
             straight_flush_cards = self.check_straight(flush_cards)
             if straight_flush_cards:
                 if max(card.value for card in straight_flush_cards) == 14:
-                    #Royal Flush
+                    # Royal Flush
                     print("Royal Flush")
                     return (HandStrength.ROYAL_FLUSH, straight_flush_cards)
                 else:
-                    #Straight Flush
+                    # Straight Flush
                     print("Straight Flush")
                     return (HandStrength.STRAIGHT_FLUSH, straight_flush_cards)
         trips = set()
         pairs = set()
         print(sorted_by_value_decreasing)
         for value in values:
-            #Four of a kind
+            # Four of a kind
             if values.count(value) == 4:
                 print("foak")
                 res = [card for card in sorted_by_value_decreasing if card.value == value]
@@ -69,7 +69,7 @@ class Evaluator():
             elif values.count(value) == 2:
                 pairs.add(value)
         if len(trips) == 2:
-            #Full house
+            # Full house
             res = [card for card in sorted_by_value_decreasing if card.value in trips]
             res.pop()
             return (HandStrength.FULL_HOUSE, res)
@@ -78,14 +78,14 @@ class Evaluator():
             res = res + [card for card in sorted_by_value_decreasing if card.value == max(pairs)]
             return (HandStrength.FULL_HOUSE, res)
 
-        #Flush
+        # Flush
         if flush_cards:
             return (HandStrength.FLUSH, flush_cards)
-        #Straight
+        # Straight
         straight_cards = self.check_straight(sorted_by_value_decreasing)
         if straight_cards:
             return (HandStrength.STRAIGHT, straight_cards)
-        #Three of a kind
+        # Three of a kind
         if trips:
             high = max(trips)
             res = [card for card in sorted_by_value_decreasing if card.value == high]
@@ -95,7 +95,7 @@ class Evaluator():
                 if len(res) == 5:
                     break
             return (HandStrength.THREE_OF_A_KIND, res)
-        #Two pair
+        # Two pair
         if len(pairs) >= 2:
             high1 = max(pairs)
             pairs.remove(high1)
@@ -107,14 +107,16 @@ class Evaluator():
                     res.append(card)
                     break
             return (HandStrength.TWO_PAIR, res)
-        #Pair
+        # Pair
         elif len(pairs) == 1:
             high = max(pairs)
             res = [card for card in sorted_by_value_decreasing if card.value == high]
             for card in sorted_by_value_decreasing:
                 if card.value != high:
+                    print(card.value)
                     res.append(card)
                 if len(res) == 5:
                     break
-        #High Card
+            return (HandStrength.PAIR, res)
+        # High Card
         return (HandStrength.HIGH_CARD ,sorted_by_value_decreasing[:5])

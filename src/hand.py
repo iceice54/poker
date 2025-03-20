@@ -20,11 +20,12 @@ class Hand():
     
     def __len__(self) -> int:
         return len(self.cards)
-    
+
 class PlayerHand(Hand):
-    def __init__(self) -> None:
-        super().__init__(max_cards=2)
+    def __init__(self, cards: list[Card] | None = None) -> None:
+        super().__init__(2, cards)
+
 
 class CommunityCards(Hand):
-    def __init__(self) -> None:
-        super().__init__(max_cards=5)
+    def __init__(self, cards: list[Card] | None = None) -> None:
+        super().__init__(5, cards)
